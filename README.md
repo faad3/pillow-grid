@@ -82,6 +82,28 @@ my_grid = grid(
 my_grid.save('aligned_grid.png')
 ```
 
+### With Individual Image Labels
+
+```python
+from pillow_grid import grid
+
+# Create grid with labels under each individual image
+my_grid = grid(
+    images=['cat.jpg', 'dog.jpg', 'bird.jpg', 'fish.jpg'],
+    rows=2, 
+    cols=2,
+    all_labels=['Fluffy Cat', 'Golden Retriever', 'Blue Jay', 'Goldfish'],
+    all_labels_max_lines=2,
+    all_labels_align='center',
+    spacing=5,  # Will be auto-adjusted to fit labels if needed
+    font_size=12
+)
+
+my_grid.save('individual_labels_grid.png')
+```
+
+**Note:** When using `all_labels`, the spacing between rows is automatically adjusted to be at least `line_height * all_labels_max_lines` to ensure labels don't overlap with images below them.
+
 ### Auto-sizing
 
 ```python
@@ -115,11 +137,14 @@ Create a Grid object from a list of images.
 - `cols`: Number of columns (auto-calculated if not provided)
 - `x_labels`: Optional list of labels for columns
 - `y_labels`: Optional list of labels for rows
+- `all_labels`: Optional list of labels for each individual image (positioned under each image)
 - `spacing`: Spacing between images in pixels (default: 5)
 - `x_labels_max_lines`: Maximum number of lines for x-labels (default: 1)
 - `y_labels_max_lines`: Maximum number of lines for y-labels (default: 1)
-- `x_align`: Horizontal alignment for x-labels - 'left', 'center', 'right' (default: 'center')
-- `y_align`: Horizontal alignment for y-labels - 'left', 'center', 'right' (default: 'center')
+- `all_labels_max_lines`: Maximum number of lines for all_labels (default: 1)
+- `x_labels_align`: Horizontal alignment for x-labels - 'left', 'center', 'right' (default: 'center')
+- `y_labels_align`: Horizontal alignment for y-labels - 'left', 'center', 'right' (default: 'center')
+- `all_labels_align`: Horizontal alignment for all_labels - 'left', 'center', 'right' (default: 'center')
 - `font_size`: Size of label font (default: 12)
 - `background_color`: Background color for the grid (default: "white")
 

@@ -67,10 +67,13 @@ def main():
         cols=2,
         x_labels=['Left Column' * 1, 'Right Column'],
         y_labels=['Top Row', 'Bottom Row'],
+        all_labels=['Image A', 'Image B', 'Image C', 'Image D'],
         spacing=5,
         font_size=12,
         x_labels_max_lines=2,
-        y_labels_max_lines=2
+        y_labels_max_lines=2,
+        all_labels_max_lines=1,
+        all_labels_align='center',
     )
     grid2.save('output/example_labeled_grid.png')
     print(f"Saved labeled grid: {grid2.size}")
@@ -113,20 +116,30 @@ def main():
     grid5.save('output/example_long_text_grid.png')
     print(f"Saved long text grid: {grid5.size}")
 
-    # Example 6: Different sized images
-    print("Creating grid with different sized images...")
+    # Example 6: Different sized images with individual labels
+    print("Creating grid with different sized images and individual labels...")
     different_images = create_different_sized_images()
     grid6 = grid(
         different_images,
         rows=2,
         cols=3,
-        spacing=10,
+        spacing=5,  # Small spacing - will be automatically increased to fit labels
         x_labels=['Small Square', 'Wide Rect', 'Tall Rect'],
         y_labels=['Row 1', 'Row 2'],
+        all_labels=[
+            'Small 100x100',
+            'Wide 300x150', 
+            'Tall 150x300',
+            'Medium 250x200',
+            'Portrait 80x120',
+            'Very Wide 400x100'
+        ],
         x_labels_max_lines=2,
         y_labels_max_lines=1,
+        all_labels_max_lines=1,
         x_labels_align='center',
         y_labels_align='center',
+        all_labels_align='center',
         font_size=20,
         background_color='lightblue'
     )
@@ -135,6 +148,7 @@ def main():
     print("Original image sizes:")
     for i, img in enumerate(different_images):
         print(f"  Image {i+1}: {img.size}")
+    print(f"Note: Spacing was automatically adjusted from 5px to accommodate individual labels")
     
     print("\nAll examples created successfully!")
     print("Generated files:")

@@ -10,7 +10,7 @@ import sys
 # Add the package to the path for testing
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from pillow_grid import grid
+from pillow_grid import Grid
 
 
 def create_sample_images():
@@ -55,13 +55,13 @@ def main():
     
     # Example 1: Basic 2x3 grid
     print("Creating basic 2x3 grid...")
-    grid1 = grid(images, rows=2, cols=3)
+    grid1 = Grid(images, rows=2, cols=3)
     grid1.save('output/example_basic_grid.png')
     print(f"Saved basic grid: {grid1.size}")
     
     # Example 2: Grid with labels
     print("Creating grid with labels...")
-    grid2 = grid(
+    grid2 = Grid(
         images[:4], 
         rows=2, 
         cols=2,
@@ -80,13 +80,13 @@ def main():
     
     # Example 3: Auto-sized grid
     print("Creating auto-sized grid...")
-    grid3 = grid(images, spacing=15)
+    grid3 = Grid(images, spacing=15)
     grid3.save('output/example_auto_grid.png')
     print(f"Saved auto grid: {grid3.size}")
     
     # Example 4: Custom background and styling
     print("Creating custom styled grid...")
-    grid4 = grid(
+    grid4 = Grid(
         images[:3],
         rows=1,
         cols=3,
@@ -100,7 +100,7 @@ def main():
     print(f"Saved custom grid: {grid4.size}")
 
     print("Creating grid with long text and different alignments...")
-    grid5 = grid(
+    grid5 = Grid(
         images[:3],
         rows=2,
         cols=2,
@@ -119,7 +119,7 @@ def main():
     # Example 6: Different sized images with individual labels
     print("Creating grid with different sized images and individual labels...")
     different_images = create_different_sized_images()
-    grid6 = grid(
+    grid6 = Grid(
         different_images,
         rows=2,
         cols=3,

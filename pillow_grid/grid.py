@@ -29,7 +29,9 @@ class Grid:
         font_size: Size of label font
     """
     
-    def __init__(self, images: List[Image.Image], rows: int, cols: int, 
+    def __init__(self, images: List[Union[Image.Image, str]], 
+                 rows: Optional[int] = None, 
+                 cols: Optional[int] = None, 
                  x_labels: Optional[List[str]] = None, 
                  y_labels: Optional[List[str]] = None,
                  all_labels: Optional[List[str]] = None,
@@ -47,9 +49,9 @@ class Grid:
         Initialize a Grid object.
         
         Args:
-            images: List of PIL Image objects
-            rows: Number of rows in the grid
-            cols: Number of columns in the grid
+            images: List of PIL Image objects or file paths
+            rows: Number of rows (auto-calculated if not provided)
+            cols: Number of columns (auto-calculated if not provided)
             x_labels: Optional list of labels for columns
             y_labels: Optional list of labels for rows
             all_labels: Optional list of labels for each individual image
@@ -64,7 +66,32 @@ class Grid:
             font_path: Optional path to a specific font file
             background_color: Background color for the grid
         """
-        self.images = images
+        # Convert string paths to Image objects
+        pil_images = []
+        for img in images:
+            if isinstance(img, str):
+                if os.path.exists(img):
+                    pil_images.append(Image.open(img))
+                else:
+                    raise FileNotFoundError(f"Image file not found: {img}")
+            elif isinstance(img, Image.Image):
+                pil_images.append(img)
+            else:
+                raise TypeError(f"Expected PIL Image or file path, got {type(img)}")
+        
+        self.images = pil_images
+        
+        # Auto-calculate rows and cols if not provided
+        n_images = len(pil_images)
+        if rows is None and cols is None:
+            # Default to roughly square grid
+            cols = int(n_images ** 0.5)
+            rows = (n_images + cols - 1) // cols
+        elif rows is None:
+            rows = (n_images + cols - 1) // cols
+        elif cols is None:
+            cols = (n_images + rows - 1) // rows
+        
         self.rows = rows
         self.cols = cols
         self.x_labels = x_labels or []
@@ -82,8 +109,8 @@ class Grid:
         self.background_color = background_color
         
         # Validate inputs
-        if len(images) > rows * cols:
-            raise ValueError(f"Too many images ({len(images)}) for grid size {rows}x{cols}")
+        if len(self.images) > rows * cols:
+            raise ValueError(f"Too many images ({len(self.images)}) for grid size {rows}x{cols}")
         
         if self.x_labels and len(self.x_labels) > cols:
             raise ValueError(f"Too many x_labels ({len(self.x_labels)}) for {cols} columns")
@@ -91,8 +118,8 @@ class Grid:
         if self.y_labels and len(self.y_labels) > rows:
             raise ValueError(f"Too many y_labels ({len(self.y_labels)}) for {rows} rows")
         
-        if self.all_labels and len(self.all_labels) > len(images):
-            raise ValueError(f"Too many all_labels ({len(self.all_labels)}) for {len(images)} images")
+        if self.all_labels and len(self.all_labels) > len(self.images):
+            raise ValueError(f"Too many all_labels ({len(self.all_labels)}) for {len(self.images)} images")
         
         if x_labels_align not in ['left', 'center', 'right']:
             raise ValueError(f"x_labels_align must be 'left', 'center', or 'right', got '{x_labels_align}'")
@@ -575,73 +602,4 @@ class Grid:
         """Get the mode of the grid image."""
         if self._grid_image is None:
             return "RGB"
-        return self._grid_image.mode
-
-
-def grid(images: List[Union[Image.Image, str]], 
-         rows: Optional[int] = None, 
-         cols: Optional[int] = None,
-         x_labels: Optional[List[str]] = None,
-         y_labels: Optional[List[str]] = None,
-         all_labels: Optional[List[str]] = None,
-         spacing: int = 5,
-         x_labels_max_lines: int = 1,
-         y_labels_max_lines: int = 1,
-         all_labels_max_lines: int = 1,
-         x_labels_align: str = 'center',
-         y_labels_align: str = 'center',
-         all_labels_align: str = 'center',
-         font_size: int = 12,
-         font_path: Optional[str] = None,
-         background_color: Union[str, Tuple[int, int, int]] = "white") -> Grid:
-    """
-    Create a Grid object from a list of images.
-    
-    Args:
-        images: List of PIL Image objects or file paths
-        rows: Number of rows (auto-calculated if not provided)
-        cols: Number of columns (auto-calculated if not provided)
-        x_labels: Optional list of labels for columns
-        y_labels: Optional list of labels for rows
-        all_labels: Optional list of labels for each individual image
-        spacing: Spacing between images in pixels
-        x_labels_max_lines: Maximum number of lines for x-labels (default: 1)
-        y_labels_max_lines: Maximum number of lines for y-labels (default: 1)
-        all_labels_max_lines: Maximum number of lines for all_labels (default: 1)
-        x_labels_align: Horizontal alignment for x-labels ('left', 'center', 'right')
-        y_labels_align: Horizontal alignment for y-labels ('left', 'center', 'right')
-        all_labels_align: Horizontal alignment for all_labels ('left', 'center', 'right')
-        font_size: Size of label font
-        font_path: Optional path to a specific font file
-        background_color: Background color for the grid
-    
-    Returns:
-        Grid object
-    """
-    # Convert string paths to Image objects
-    pil_images = []
-    for img in images:
-        if isinstance(img, str):
-            if os.path.exists(img):
-                pil_images.append(Image.open(img))
-            else:
-                raise FileNotFoundError(f"Image file not found: {img}")
-        elif isinstance(img, Image.Image):
-            pil_images.append(img)
-        else:
-            raise TypeError(f"Expected PIL Image or file path, got {type(img)}")
-    
-    # Auto-calculate rows and cols if not provided
-    n_images = len(pil_images)
-    if rows is None and cols is None:
-        # Default to roughly square grid
-        cols = int(n_images ** 0.5)
-        rows = (n_images + cols - 1) // cols
-    elif rows is None:
-        rows = (n_images + cols - 1) // cols
-    elif cols is None:
-        cols = (n_images + rows - 1) // rows
-    
-    return Grid(pil_images, rows, cols, x_labels, y_labels, all_labels,
-                spacing, x_labels_max_lines, y_labels_max_lines, all_labels_max_lines,
-                x_labels_align, y_labels_align, all_labels_align, font_size, font_path, background_color) 
+        return self._grid_image.mode 

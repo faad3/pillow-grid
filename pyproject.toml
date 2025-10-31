@@ -32,9 +32,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/pillow-grid"
-Repository = "https://github.com/yourusername/pillow-grid"
-"Bug Tracker" = "https://github.com/yourusername/pillow-grid/issues"
+Homepage = "https://github.com/faad3/pillow-grid"
+Repository = "https://github.com/faad3/pillow-grid"
+"Bug Tracker" = "https://github.com/faad3/pillow-grid/issues"
 
 [tool.setuptools]
 packages = ["pillow_grid"]

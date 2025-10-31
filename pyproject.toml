@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pillow-grid"
-version = "0.1.0"
+version = "0.1.1"
 description = "A simple Python package for creating image grids with PIL (Pillow)"
 readme = "README.md"
 requires-python = ">=3.7"
@@ -28,7 +28,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "Pillow>=8.0.0",
+    "Pillow>=9.1.1",
 ]
 
 [project.urls]

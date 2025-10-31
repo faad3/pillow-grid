@@ -14,34 +14,34 @@ class Grid:
     
     Attributes:
         images: List of PIL Images
+        labels: Labels for each individual image
         rows: Number of rows in the grid
         cols: Number of columns in the grid
         x_labels: Labels for columns
         y_labels: Labels for rows
-        all_labels: Labels for each individual image
         spacing: Spacing between images in pixels
-        x_labels_max_lines: Maximum number of lines for x-labels
-        y_labels_max_lines: Maximum number of lines for y-labels
-        all_labels_max_lines: Maximum number of lines for all_labels
-        x_labels_align: Horizontal alignment for x-labels
-        y_labels_align: Horizontal alignment for y-labels
-        all_labels_align: Horizontal alignment for all_labels
+        x_labels_max_lines: Maximum number of lines for x_labels
+        y_labels_max_lines: Maximum number of lines for y_labels
+        labels_max_lines: Maximum number of lines for labels
+        x_labels_align: Horizontal alignment for x_labels
+        y_labels_align: Horizontal alignment for y_labels
+        labels_align: Horizontal alignment for labels
         font_size: Size of label font
     """
     
     def __init__(self, images: List[Union[Image.Image, str]], 
+                 labels: Optional[List[str]] = None,
                  rows: Optional[int] = None, 
                  cols: Optional[int] = None, 
                  x_labels: Optional[List[str]] = None, 
                  y_labels: Optional[List[str]] = None,
-                 all_labels: Optional[List[str]] = None,
                  spacing: int = 5,
                  x_labels_max_lines: int = 2,
                  y_labels_max_lines: int = 2,
-                 all_labels_max_lines: int = 1,
+                 labels_max_lines: int = 1,
                  x_labels_align: str = 'left',
                  y_labels_align: str = 'left',
-                 all_labels_align: str = 'center',
+                 labels_align: str = 'center',
                  font_size: int = 12,
                  font_path: Optional[str] = None,
                  background_color: Union[str, Tuple[int, int, int]] = "white"):
@@ -50,18 +50,18 @@ class Grid:
         
         Args:
             images: List of PIL Image objects or file paths
+            labels: Optional list of labels for each individual image
             rows: Number of rows (auto-calculated if not provided)
             cols: Number of columns (auto-calculated if not provided)
             x_labels: Optional list of labels for columns
             y_labels: Optional list of labels for rows
-            all_labels: Optional list of labels for each individual image
             spacing: Spacing between images in pixels
-            x_labels_max_lines: Maximum number of lines for x-labels (default: 2)
-            y_labels_max_lines: Maximum number of lines for y-labels (default: 2)
-            all_labels_max_lines: Maximum number of lines for all_labels (default: 1)
-            x_labels_align: Horizontal alignment for x-labels ('left', 'center', 'right')
-            y_labels_align: Horizontal alignment for y-labels ('left', 'center', 'right')
-            all_labels_align: Horizontal alignment for all_labels ('left', 'center', 'right')
+            x_labels_max_lines: Maximum number of lines for x_labels (default: 2)
+            y_labels_max_lines: Maximum number of lines for y_labels (default: 2)
+            labels_max_lines: Maximum number of lines for labels (default: 1)
+            x_labels_align: Horizontal alignment for x_labels ('left', 'center', 'right')
+            y_labels_align: Horizontal alignment for y_labels ('left', 'center', 'right')
+            labels_align: Horizontal alignment for labels ('left', 'center', 'right')
             font_size: Size of label font
             font_path: Optional path to a specific font file
             background_color: Background color for the grid
@@ -96,14 +96,14 @@ class Grid:
         self.cols = cols
         self.x_labels = x_labels or []
         self.y_labels = y_labels or []
-        self.all_labels = all_labels or []
+        self.labels = labels or []
         self.spacing = spacing
         self.x_labels_max_lines = x_labels_max_lines
         self.y_labels_max_lines = y_labels_max_lines
-        self.all_labels_max_lines = all_labels_max_lines
+        self.labels_max_lines = labels_max_lines
         self.x_labels_align = x_labels_align
         self.y_labels_align = y_labels_align
-        self.all_labels_align = all_labels_align
+        self.labels_align = labels_align
         self.font_size = font_size
         self.font_path = font_path
         self.background_color = background_color
@@ -118,8 +118,8 @@ class Grid:
         if self.y_labels and len(self.y_labels) > rows:
             raise ValueError(f"Too many y_labels ({len(self.y_labels)}) for {rows} rows")
         
-        if self.all_labels and len(self.all_labels) > len(self.images):
-            raise ValueError(f"Too many all_labels ({len(self.all_labels)}) for {len(self.images)} images")
+        if self.labels and len(self.labels) > len(self.images):
+            raise ValueError(f"Too many labels ({len(self.labels)}) for {len(self.images)} images")
         
         if x_labels_align not in ['left', 'center', 'right']:
             raise ValueError(f"x_labels_align must be 'left', 'center', or 'right', got '{x_labels_align}'")
@@ -127,8 +127,8 @@ class Grid:
         if y_labels_align not in ['left', 'center', 'right']:
             raise ValueError(f"y_labels_align must be 'left', 'center', or 'right', got '{y_labels_align}'")
             
-        if all_labels_align not in ['left', 'center', 'right']:
-            raise ValueError(f"all_labels_align must be 'left', 'center', or 'right', got '{all_labels_align}'")
+        if labels_align not in ['left', 'center', 'right']:
+            raise ValueError(f"labels_align must be 'left', 'center', or 'right', got '{labels_align}'")
         
         self._grid_image = None
         self._create_grid()
@@ -196,32 +196,32 @@ class Grid:
         font_height = ascent + descent
         line_height = int(font_height * 1.05)  # Add 5% spacing between lines
         
-        # Calculate actual space needed for x-labels
+        # Calculate actual space needed for x_labels
         x_label_space = 0
         if self.x_labels:
             # Use max_lines multiplied by font height
             x_label_space = self.x_labels_max_lines * line_height
         
-        # Calculate actual space needed for y-labels
+        # Calculate actual space needed for y_labels
         y_label_space = 0
         if self.y_labels:
             # For rotated text, we need space equal to max_lines * font_height
             # This becomes the width after rotation
             y_label_space = self.y_labels_max_lines * line_height
         
-        # Calculate actual space needed for all_labels (individual image labels)
-        all_label_space = 0
+        # Calculate actual space needed for labels (individual image labels)
+        label_space = 0
         effective_spacing = self.spacing
-        if self.all_labels:
-            all_label_space = self.all_labels_max_lines * line_height
+        if self.labels:
+            label_space = self.labels_max_lines * line_height
             # Spacing between rows should be at least enough for the labels
-            min_required_spacing = all_label_space
+            min_required_spacing = label_space
             effective_spacing = max(self.spacing, min_required_spacing)
         
         grid_width = (self.cols * img_width + (self.cols - 1) * self.spacing + 
                      y_label_space)
         grid_height = (self.rows * img_height + (self.rows - 1) * effective_spacing + 
-                      x_label_space + all_label_space)
+                      x_label_space + label_space)
         
         # Create the grid canvas
         self._grid_image = Image.new('RGB', (grid_width, grid_height), self.background_color)
@@ -309,9 +309,9 @@ class Grid:
                         # Paste the rotated text
                         self._grid_image.paste(rotated_temp, (paste_x, paste_y))
         
-        # Add all labels (individual image labels) - positioned under each image
-        if self.all_labels:
-            for i, label in enumerate(self.all_labels):
+        # Add labels (individual image labels) - positioned under each image
+        if self.labels:
+            for i, label in enumerate(self.labels):
                 if i < len(resized_images):
                     # Calculate position of this image
                     row = i // self.cols
@@ -322,7 +322,7 @@ class Grid:
                     img_y = row * (img_height + effective_spacing) + x_label_space
                     
                     # Wrap text to fit within max_lines
-                    wrapped_lines = self._wrap_text_to_lines(label, font, img_width, self.all_labels_max_lines, draw)
+                    wrapped_lines = self._wrap_text_to_lines(label, font, img_width, self.labels_max_lines, draw)
                     
                     if wrapped_lines:  # Only draw if we have text
                         # Calculate starting y position (below the image)
@@ -335,7 +335,7 @@ class Grid:
                         for line_idx, line in enumerate(wrapped_lines):
                             if line:  # Only draw non-empty lines
                                 text_width = draw.textlength(line, font=font)
-                                x_offset = self._get_text_x_position(text_width, img_width, self.all_labels_align)
+                                x_offset = self._get_text_x_position(text_width, img_width, self.labels_align)
                                 x = img_x + x_offset
                                 y = y_start + line_idx * line_height
                                 draw.text((x, y), line, fill="black", font=font)

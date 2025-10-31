@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pillow-grid"
+version = "0.1.0"
+description = "A simple Python package for creating image grids with PIL (Pillow)"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Danila Berezin"}
+]
+keywords = ["pillow", "image", "grid", "layout", "visualization"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "Pillow>=8.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pillow-grid"
+Repository = "https://github.com/yourusername/pillow-grid"
+"Bug Tracker" = "https://github.com/yourusername/pillow-grid/issues"
+
+[tool.setuptools]
+packages = ["pillow_grid"]
+
+[tool.setuptools.package-data]
+pillow_grid = ["fonts/*.ttf", "fonts/*.txt"]
+
+[project.scripts]
+pillow-grid = "pillow_grid.cli:main"
+

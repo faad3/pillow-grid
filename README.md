@@ -16,7 +16,33 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Basic Usage
+You can use `pillow-grid` either as a Python library or as a command-line tool.
+
+### Command-Line Usage
+
+After installation, you can use the `pillow-grid` command:
+
+```bash
+# Create a 2x3 grid from images
+pillow-grid img1.jpg img2.jpg img3.jpg img4.jpg img5.jpg img6.jpg -o grid.png --rows 2 --cols 3
+
+# Auto-sized grid with labels
+pillow-grid *.jpg -o output.png --labels "Cat,Dog,Bird,Fish"
+
+# Grid with row and column labels
+pillow-grid *.png -o grid.png --rows 2 --cols 2 \
+  --x-labels "Col 1,Col 2" --y-labels "Row 1,Row 2"
+
+# Custom spacing and font size
+pillow-grid img*.jpg -o grid.png --spacing 20 --font-size 16
+
+# See all options
+pillow-grid --help
+```
+
+### Python Library Usage
+
+#### Basic Usage
 
 ```python
 from pillow_grid import grid
@@ -40,12 +66,12 @@ my_grid.save('my_grid.png')
 my_grid.show()
 ```
 
-### With Labels
+### With Row and Column Labels
 
 ```python
 from pillow_grid import grid
 
-# Create grid with labels
+# Create grid with row and column labels
 my_grid = grid(
     images=['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg'],
     rows=2, 
@@ -66,15 +92,15 @@ my_grid.save('labeled_grid.png')
 ```python
 from pillow_grid import grid
 
-# Create grid with left-aligned x-labels and right-aligned y-labels
+# Create grid with left-aligned x_labels and right-aligned y_labels
 my_grid = grid(
     images=['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg'],
     rows=2, 
     cols=2,
     x_labels=['Long Column Label 1', 'Long Column Label 2'],
     y_labels=['Long Row Label 1', 'Long Row Label 2'],
-    x_align='left',      # Left-align column labels
-    y_align='right',     # Right-align row labels
+    x_labels_align='left',      # Left-align column labels
+    y_labels_align='right',     # Right-align row labels
     x_labels_max_lines=2,
     y_labels_max_lines=1
 )
@@ -90,11 +116,11 @@ from pillow_grid import grid
 # Create grid with labels under each individual image
 my_grid = grid(
     images=['cat.jpg', 'dog.jpg', 'bird.jpg', 'fish.jpg'],
+    labels=['Fluffy Cat', 'Golden Retriever', 'Blue Jay', 'Goldfish'],
     rows=2, 
     cols=2,
-    all_labels=['Fluffy Cat', 'Golden Retriever', 'Blue Jay', 'Goldfish'],
-    all_labels_max_lines=2,
-    all_labels_align='center',
+    labels_max_lines=2,
+    labels_align='center',
     spacing=5,  # Will be auto-adjusted to fit labels if needed
     font_size=12
 )
@@ -102,7 +128,7 @@ my_grid = grid(
 my_grid.save('individual_labels_grid.png')
 ```
 
-**Note:** When using `all_labels`, the spacing between rows is automatically adjusted to be at least `line_height * all_labels_max_lines` to ensure labels don't overlap with images below them.
+**Note:** When using `labels`, the spacing between rows is automatically adjusted to be at least `line_height * labels_max_lines` to ensure labels don't overlap with images below them. Note how `labels` is the second parameter after `images` for convenient use!
 
 ### Auto-sizing
 
@@ -118,33 +144,73 @@ my_grid.save('auto_grid.png')
 
 ## Features
 
+- **Command-line tool**: Create grids directly from the terminal
 - **Automatic resizing**: Images are automatically resized to fit uniformly in the grid
 - **Flexible layouts**: Specify rows and columns or let the package auto-calculate
-- **Labels**: Add column and row labels
+- **Labels**: Add column labels, row labels, and individual image labels
 - **Customizable spacing**: Control spacing between images
 - **PIL-like interface**: Familiar methods like `save()`, `show()`, `copy()`, etc.
 - **Multiple input formats**: Accept PIL Images or file paths
 
 ## API Reference
 
-### `grid(images, rows=None, cols=None, **kwargs)`
+### Command-Line Interface
+
+```bash
+pillow-grid [images...] -o OUTPUT [options]
+```
+
+**Required Arguments:**
+- `images`: Input image files (supports multiple files)
+- `-o, --output`: Output file path
+
+**Grid Layout:**
+- `--rows`: Number of rows (auto-calculated if not specified)
+- `--cols`: Number of columns (auto-calculated if not specified)
+
+**Labels:**
+- `--labels`: Comma-separated labels for each image
+- `--x-labels`: Comma-separated column labels
+- `--y-labels`: Comma-separated row labels
+
+**Label Styling:**
+- `--labels-align {left,center,right}`: Image label alignment (default: center)
+- `--x-labels-align {left,center,right}`: Column label alignment (default: left)
+- `--y-labels-align {left,center,right}`: Row label alignment (default: left)
+- `--labels-max-lines`: Maximum lines for image labels (default: 1)
+- `--x-labels-max-lines`: Maximum lines for column labels (default: 2)
+- `--y-labels-max-lines`: Maximum lines for row labels (default: 2)
+
+**Styling:**
+- `--spacing`: Spacing between images in pixels (default: 5)
+- `--font-size`: Font size for labels (default: 12)
+- `--background-color`: Background color (default: white)
+- `--font-path`: Path to custom font file
+
+**Other:**
+- `-v, --verbose`: Verbose output
+- `-h, --help`: Show help message
+
+### Python API
+
+#### `Grid(images, labels=None, rows=None, cols=None, **kwargs)`
 
 Create a Grid object from a list of images.
 
 **Parameters:**
 - `images`: List of PIL Image objects or file paths
+- `labels`: Optional list of labels for each individual image (positioned under each image)
 - `rows`: Number of rows (auto-calculated if not provided)
 - `cols`: Number of columns (auto-calculated if not provided)
 - `x_labels`: Optional list of labels for columns
 - `y_labels`: Optional list of labels for rows
-- `all_labels`: Optional list of labels for each individual image (positioned under each image)
 - `spacing`: Spacing between images in pixels (default: 5)
-- `x_labels_max_lines`: Maximum number of lines for x-labels (default: 1)
-- `y_labels_max_lines`: Maximum number of lines for y-labels (default: 1)
-- `all_labels_max_lines`: Maximum number of lines for all_labels (default: 1)
-- `x_labels_align`: Horizontal alignment for x-labels - 'left', 'center', 'right' (default: 'center')
-- `y_labels_align`: Horizontal alignment for y-labels - 'left', 'center', 'right' (default: 'center')
-- `all_labels_align`: Horizontal alignment for all_labels - 'left', 'center', 'right' (default: 'center')
+- `x_labels_max_lines`: Maximum number of lines for x_labels (default: 2)
+- `y_labels_max_lines`: Maximum number of lines for y_labels (default: 2)
+- `labels_max_lines`: Maximum number of lines for labels (default: 1)
+- `x_labels_align`: Horizontal alignment for x_labels - 'left', 'center', 'right' (default: 'left')
+- `y_labels_align`: Horizontal alignment for y_labels - 'left', 'center', 'right' (default: 'left')
+- `labels_align`: Horizontal alignment for labels - 'left', 'center', 'right' (default: 'center')
 - `font_size`: Size of label font (default: 12)
 - `background_color`: Background color for the grid (default: "white")
 

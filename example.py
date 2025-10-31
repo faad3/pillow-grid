@@ -59,74 +59,84 @@ def main():
     grid1.save('output/example_basic_grid.png')
     print(f"Saved basic grid: {grid1.size}")
     
-    # Example 2: Grid with labels
-    print("Creating grid with labels...")
+    # Example 2: Grid with only images and labels (no row/col labels)
+    print("Creating grid with only image labels...")
     grid2 = Grid(
+        images[:4],
+        labels=['Image A', 'Image B', 'Image C', 'Image D'],
+        rows=2,
+        cols=2,
+        spacing=10,
+        font_size=14,
+        labels_align='center',
+    )
+    grid2.save('output/example_only_labels_grid.png')
+    print(f"Saved grid with only image labels: {grid2.size}")
+    
+    # Example 3: Grid with all types of labels
+    print("Creating grid with all label types...")
+    grid3 = Grid(
         images[:4], 
+        labels=['Image A', 'Image B', 'Image C', 'Image D'],
         rows=2, 
         cols=2,
         x_labels=['Left Column' * 1, 'Right Column'],
         y_labels=['Top Row', 'Bottom Row'],
-        all_labels=['Image A', 'Image B', 'Image C', 'Image D'],
         spacing=5,
         font_size=12,
         x_labels_max_lines=2,
         y_labels_max_lines=2,
-        all_labels_max_lines=1,
-        all_labels_align='center',
+        labels_max_lines=1,
+        labels_align='center',
     )
-    grid2.save('output/example_labeled_grid.png')
-    print(f"Saved labeled grid: {grid2.size}")
+    grid3.save('output/example_all_labels_grid.png')
+    print(f"Saved grid with all labels: {grid3.size}")
     
-    # Example 3: Auto-sized grid
+    # Example 4: Auto-sized grid
     print("Creating auto-sized grid...")
-    grid3 = Grid(images, spacing=15)
-    grid3.save('output/example_auto_grid.png')
-    print(f"Saved auto grid: {grid3.size}")
+    grid4 = Grid(images, spacing=15)
+    grid4.save('output/example_auto_grid.png')
+    print(f"Saved auto grid: {grid4.size}")
     
-    # Example 4: Custom background and styling
+    # Example 5: Custom background and styling
     print("Creating custom styled grid...")
-    grid4 = Grid(
+    grid5 = Grid(
         images[:3],
         rows=1,
         cols=3,
+        x_labels=['Image A', 'Image B', 'Image C'],
         spacing=25,
         background_color='lightgray',
-        x_labels=['Image A', 'Image B', 'Image C'],
         x_labels_max_lines=2,
         font_size=18
     )
-    grid4.save('output/example_custom_grid.png')
-    print(f"Saved custom grid: {grid4.size}")
+    grid5.save('output/example_custom_grid.png')
+    print(f"Saved custom grid: {grid5.size}")
 
+    # Example 6: Grid with long text and different alignments
     print("Creating grid with long text and different alignments...")
-    grid5 = Grid(
+    grid6 = Grid(
         images[:3],
         rows=2,
         cols=2,
-        spacing=5,
         x_labels=['Its a very long text which we are going to use to test the grid', 'Image B '],
         y_labels=['Top Row ', 'Its a very long text which we are going to use to test the grid'],
+        spacing=5,
         x_labels_max_lines=2,
         y_labels_max_lines=1,
         x_labels_align='left',    
         y_labels_align='left',
         font_size=18
     )
-    grid5.save('output/example_long_text_grid.png')
-    print(f"Saved long text grid: {grid5.size}")
+    grid6.save('output/example_long_text_grid.png')
+    print(f"Saved long text grid: {grid6.size}")
 
-    # Example 6: Different sized images with individual labels
-    print("Creating grid with different sized images and individual labels...")
+    # Example 7: Different sized images with all label types
+    print("Creating grid with different sized images and all label types...")
     different_images = create_different_sized_images()
-    grid6 = Grid(
+    grid7 = Grid(
         different_images,
-        rows=2,
-        cols=3,
-        spacing=5,  # Small spacing - will be automatically increased to fit labels
-        x_labels=['Small Square', 'Wide Rect', 'Tall Rect'],
-        y_labels=['Row 1', 'Row 2'],
-        all_labels=[
+        labels=[
             'Small 100x100',
             'Wide 300x150', 
             'Tall 150x300',
@@ -134,17 +144,22 @@ def main():
             'Portrait 80x120',
             'Very Wide 400x100'
         ],
+        rows=2,
+        cols=3,
+        x_labels=['Small Square', 'Wide Rect', 'Tall Rect'],
+        y_labels=['Row 1', 'Row 2'],
+        spacing=5,  # Small spacing - will be automatically increased to fit labels
         x_labels_max_lines=2,
         y_labels_max_lines=1,
-        all_labels_max_lines=1,
+        labels_max_lines=1,
         x_labels_align='center',
         y_labels_align='center',
-        all_labels_align='center',
+        labels_align='center',
         font_size=20,
         background_color='lightblue'
     )
-    grid6.save('output/example_different_sizes_grid.png')
-    print(f"Saved different sizes grid: {grid6.size}")
+    grid7.save('output/example_different_sizes_grid.png')
+    print(f"Saved different sizes grid: {grid7.size}")
     print("Original image sizes:")
     for i, img in enumerate(different_images):
         print(f"  Image {i+1}: {img.size}")
@@ -153,7 +168,8 @@ def main():
     print("\nAll examples created successfully!")
     print("Generated files:")
     print("- example_basic_grid.png")
-    print("- example_labeled_grid.png") 
+    print("- example_only_labels_grid.png")
+    print("- example_all_labels_grid.png") 
     print("- example_auto_grid.png")
     print("- example_custom_grid.png")
     print("- example_long_text_grid.png")

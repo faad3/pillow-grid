@@ -45,7 +45,7 @@ pillow-grid --help
 #### Basic Usage
 
 ```python
-from pillow_grid import grid
+from pillow_grid import Grid
 from PIL import Image
 
 # Create some example images or load from files
@@ -57,7 +57,7 @@ images = [
 ]
 
 # Create a 2x2 grid
-my_grid = grid(images, rows=2, cols=2)
+my_grid = Grid(images, rows=2, cols=2)
 
 # Save the grid
 my_grid.save('my_grid.png')
@@ -69,10 +69,10 @@ my_grid.show()
 ### With Row and Column Labels
 
 ```python
-from pillow_grid import grid
+from pillow_grid import Grid
 
 # Create grid with row and column labels
-my_grid = grid(
+my_grid = Grid(
     images=['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg'],
     rows=2, 
     cols=2,
@@ -90,10 +90,10 @@ my_grid.save('labeled_grid.png')
 ### With Custom Alignment
 
 ```python
-from pillow_grid import grid
+from pillow_grid import Grid
 
 # Create grid with left-aligned x_labels and right-aligned y_labels
-my_grid = grid(
+my_grid = Grid(
     images=['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg'],
     rows=2, 
     cols=2,
@@ -111,10 +111,10 @@ my_grid.save('aligned_grid.png')
 ### With Individual Image Labels
 
 ```python
-from pillow_grid import grid
+from pillow_grid import Grid
 
 # Create grid with labels under each individual image
-my_grid = grid(
+my_grid = Grid(
     images=['cat.jpg', 'dog.jpg', 'bird.jpg', 'fish.jpg'],
     labels=['Fluffy Cat', 'Golden Retriever', 'Blue Jay', 'Goldfish'],
     rows=2, 
@@ -133,11 +133,11 @@ my_grid.save('individual_labels_grid.png')
 ### Auto-sizing
 
 ```python
-from pillow_grid import grid
+from pillow_grid import Grid
 
 # Auto-calculate grid dimensions (roughly square)
 images = ['img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg', 'img5.jpg']
-my_grid = grid(images)  # Will create a 3x2 grid automatically
+my_grid = Grid(images)  # Will create a 3x2 grid automatically
 
 my_grid.save('auto_grid.png')
 ```
